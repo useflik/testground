@@ -1,0 +1,45 @@
+---
+substitutions:
+    _APP_NAME: testground
+
+steps:
+  # - id: 'sonar_scanner'
+  #   name: 'docker.io/sonarsource/sonar-scanner-cli'
+  #   args: 
+  #   - '-Dproject.settings=sonar.properties'
+  
+  - id: 'docker_build'
+    name: 'gcr.io/cloud-builders/docker'
+    args: 
+    - build
+    - --tag=asia-docker.pkg.dev/${PROJECT_ID}/${BRANCH_NAME}/${TRIGGER_NAME}:${SHORT_SHA}
+    - "."
+    env: ["PORT=8080"]
+    # waitFor:
+    #   - "sonar_scanner"
+  
+  - id: 'docker_push'
+    name: 'gcr.io/cloud-builders/docker'
+    args:
+    - push
+    - asia-docker.pkg.dev/${PROJECT_ID}/${BRANCH_NAME}/${TRIGGER_NAME}:${SHORT_SHA}
+
+  # Deploy container image to Cloud Run
+  - id: deploy
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: 
+    - run
+    - deploy
+    - ${TRIGGER_NAME}-${BRANCH_NAME}
+    - --image=asia-docker.pkg.dev/${PROJECT_ID}/${BRANCH_NAME}/${TRIGGER_NAME}:${SHORT_SHA}
+    - --vpc-connector=development-vpc-connector
+    - --vpc-egress=all
+    - --region=asia-southeast2
+    - --ingress=all
+    - --allow-unauthenticated
+    
+images: 
+- 'asia-docker.pkg.dev/${PROJECT_ID}/${BRANCH_NAME}/${TRIGGER_NAME}:${SHORT_SHA}'
+options:
+  logging: CLOUD_LOGGING_ONLY
