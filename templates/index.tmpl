@@ -1,8 +1,11 @@
 <html>
 	<h1>
-		UseFlik
+		{{ .PageTitle }}
 	</h1>
   <p>
-    Hallo, apa kabar ?
+    {{ .PageDesc }}
+  </p>
+  <p>
+    Environment anda saat ini adalah <b>{{ .PageEnv }}</b>
   </p>
 </html>
