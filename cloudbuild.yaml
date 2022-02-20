@@ -3,7 +3,6 @@ substitutions:
     _APP_NAME: testground
     _ENV: test
     
-#TEST PULL REQUEST
 steps:
 
   # - id: 'sonar_scanner'
@@ -11,6 +10,11 @@ steps:
   #   args: 
   #   - '-Dproject.settings=sonar.properties'
   
+  - id: 'prepare'
+    name: 'bash'
+    args: 
+    - "cp config/.env.example config/.env"
+    
   - id: 'docker_build'
     name: 'gcr.io/cloud-builders/docker'
     args: 
