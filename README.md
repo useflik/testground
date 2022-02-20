@@ -2,6 +2,12 @@
 
 Run on port 8080
 
+```shell
+# create .env file
+> copy config/.env.example config/.env
+```
+
+
 ## Manual run 
 
 ```shell
