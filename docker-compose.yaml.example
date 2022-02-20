@@ -1,0 +1,15 @@
+version : '3.8'
+
+services:
+  http_test_server:
+    container_name: http_test_server
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GITHUB_USER: yourgituser
+        GITHUB_TOKEN: yourgittoken  
+    ports:
+      - 8080:8080
+    # env_file: 
+    #   - ./config/.env
